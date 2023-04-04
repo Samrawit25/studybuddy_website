@@ -1,0 +1,43 @@
+{% load static %}
+{% load socialaccount %}
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>UVA Study buddy</title>
+        <link rel="icon" href="{% static 'studybuddy/images/UVAlogo.png' %}" type="image/icon type">
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">  <!-- required to render properly on IE -->
+        <link rel="stylesheet" href="{% static 'studybuddy/style.css' %}">
+
+    </head>
+
+    <div class="landingPageLogoArea">
+        <img src="{% static 'studybuddy/images/UVALogo2.png' %}" alt="UVA LOGO" width="200" height="200">
+
+    </div>
+
+
+    <body id="landingPage" style="background-image: url('{% static 'studybuddy/images/landing_page_background.jpg'%}');">
+
+
+        <div class="landingPageContentArea">
+            <h1>HOOS Study</h1>
+            <br></br>
+            <h2>Find a study partner with #1 University Study buddy finder service</h2>
+
+
+            <a role="button" href="{% provider_login_url 'google' method = 'post' %}" class="landingPageSignIn">
+                {% csrf_token %}
+                <img src="{% static 'studybuddy/images/gsignin.png' %}" alt="Google Authenticate">
+            </a>
+
+
+        </div>
+
+
+    </body>
+
+
+</html>

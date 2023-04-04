@@ -17,6 +17,7 @@ class Profile(models.Model):
     phone_visible = models.BooleanField(default=False)
 
 
+
 class Course(models.Model):
     course_number = models.CharField(max_length=255, null=True, unique=True)
     course_section = models.CharField(max_length=255, null=True)
@@ -29,20 +30,20 @@ class Course(models.Model):
     instructor_email = models.CharField(max_length=255, null=True)
 
 
-class post(models.Model):
+class Post(models.Model):
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=255, null=True)
     studyCourse = models.CharField(max_length=255, null=True)
     description = models.CharField(max_length=255, null=True)
     publish_date = models.DateField(null=True)
+    studyPreference = models.CharField(max_length=255, null=True)
 
 
 class StudyBuddy(models.Model):
-    post_reference = models.ForeignKey(post, on_delete=models.CASCADE, null=True)
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    post_reference = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
     publish_date = models.DateField(null=True)
 
 
 class StudyGroup(models.Model):
-    post_reference = models.ForeignKey(post, on_delete=models.CASCADE, null=True)
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    post_reference = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
     publish_date = models.DateField(null=True)

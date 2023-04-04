@@ -1,0 +1,337 @@
+{% load static %}
+{% load socialaccount %}
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> Hoos Study </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'studybuddy/homePageStyle.css' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<nav class="navbar">
+  <div class="hamburger-menu">
+    <input id="menu__toggle" type="checkbox" />
+    <label class="menu__btn" for="menu__toggle">
+      <span></span>
+    </label>
+
+    <ul class="menu__box">
+      <li><a class="menu__item" href="{% url 'profilePage' %}">Profile</a></li>
+      <li><a class="menu__item" href="#">Message</a></li>
+      <li><a class="menu__item" href="#">POST</a></li>
+      <li><a class="menu__item" href="#">Contact Representative</a></li>
+      <li><a class="menu__item" href="{% url 'logout' %}">Sign out</a></li>
+    </ul>
+  </div>
+
+  <div>
+    <a href="{% url 'home' %}"> <h1 style="justify-content: right;">Hoos Study</h1> </a>
+  </div>
+
+  <div>
+    <form action="" class="searchBar" method="POST">
+      {% csrf_token %}
+      <input type="text" name="searchbar" placeholder="Search">
+      <input type="submit" value="Search">
+    </form>
+  </div>
+
+  <div>
+    <a href="#"> <h4>Profile</h4> </a>
+  </div>
+
+  <div>
+    <a href="#"> <h4>Sign Out</h4> </a>
+  </div>
+
+</nav>
+
+<body id="studybuddyHomepage" style="background-image: url('{% static 'studybuddy/images/landing_page_background.jpg'%}');">
+  <main class="homePageContentContainer">
+
+  </main>
+  <h1>Home page</h1>
+
+</body>
+</html>
+
+____________________________________________
+{% load static %}
+{% load socialaccount %}
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{%block titleOfPage%}HOOS Student Homepage{%endblock%}</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">  <!-- required to render properly on IE -->
+        <link rel="stylesheet" href="{% static 'studybuddy/style.css' %}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arizonia" >
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        {% block customCSS%} {% endblock %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 16px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: red;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+</style>
+
+    </head>
+
+    <nav style="position: absolute; /*Navbar must always be at the top of the view*/
+    top: 0;
+    left: 0;
+    background: black;
+    width: 100%;
+    height: 55px;
+    /* z-index: 2;*/
+
+    /*Inside the navbar, the display should be flex with equal amount of space between items */
+    display: flex;
+    /* justify-content: space-between; */
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: flex;
+    justify-content: center;">
+      <div class="dropdown">
+            <!-- contains the button that will toggle the menu -->
+        <button class="dropbtn"> MENU
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+          <a href="#" > Profile </a>
+          <a href="#" > Message </a>
+          <a href="#" > Study Buddy </a>
+          <a href="#" > Study Group </a>
+          <a href="#" > Contact Representative </a>
+          <a href="#" > Sing Out </a>
+        </div>
+      </div>
+
+      <div style="position:absolute;
+    display:flex;
+    text-align: center;
+    text-justify: center;
+    justify-content: left;
+    left: 80px;
+    width: 24vw !important;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 5;
+    padding-bottom: 5;
+
+    color: darkblue;
+    font-size: 40;
+    font-weight: bolder;
+    margin-left: 2px;">
+        <li> <a href="{% url 'homePage' %}">HOOS Study</a></li>
+      </div>
+
+      <div style="">
+        <a>Search</a>
+      </div>
+
+
+      <div style="position:absolute;
+    top:0;
+    right:0;
+    display:flex;
+    z-index: 1!important;
+    width: 80vw;
+    height: 55px;
+    /* background-color: red !important; */
+    align-items: center;
+    justify-content: right;
+    padding-right: 25px;
+    text-decoration: none;
+
+    font: 100 30px/1.5 'Arizonia', Helvetica, sans-serif;
+    margin-right: 80px;
+    color: white;
+    -webkit-text-stroke: 1px #cac7ff;;
+    text-decoration: none;
+    border-color: darkgray;">
+        <li> <a href="{% url 'profilePage' %}"> Profile </a></li>
+
+        <li> <a href="{% url 'logout' %}">Sign Out</a></li>
+      </div>
+
+    </nav>
+
+    <body style="background-color: #074f57;
+    background-image: url('{% static 'studybuddy/images/landing_page_background.jpg'%}');
+    /* background-repeat: no-repeat; */
+    background-size: cover;
+
+    /* This will make sure that the options on the home page are centered. */
+    padding-top: 55px; /* The Navbar is 55px tall*/
+    padding-bottom: 50px; /* Footer is 50 px tall*/
+    padding-left: 250px; /* Menu is 250 px wide*/
+    padding-right: 250px;
+    overflow: hidden;
+    width: 100%;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    margin:0px;">
+
+    {% comment %} Note: This block is positioned relative to the body of the html page. {% endcomment %}
+    {% block position_relative_to_body_content %} {%endblock%}
+
+    <main style=" margin:0;
+    padding:0;
+    /* width:100%; */
+    width: 1500px;
+    position:absolute;
+    top:55px;
+    bottom:50px;
+
+    color: black;
+    font-size: 25;
+
+    background: rgba(255,255,255,0.2);
+    overflow-y: auto;
+	  overflow-x: hidden;
+
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    display: flex;
+    flex-direction: column;
+    align-items: center; {% block customContainerClass%}{%endblock%}">
+
+      <div>
+        <p>Filter</p>
+      </div>
+
+      <div>
+        {% for post in posts %}
+        <h2> {{ post.Name }}</h2>
+        <p> {{ post.Major}} </p>
+        <p> {{ post.Course}} </p>
+        <p> {{ post.Description}} </p>
+        {% endfor %}
+
+        {%block content%}
+
+        {%endblock%}
+      </div>
+
+    </main>
+    </body>
+
+
+  <div style="position:absolute;
+
+    text-justify: center;
+    justify-content: left;
+    left: 80px;
+    width: 24vw !important;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 50;
+    padding-bottom: 5;
+
+    color: darkblue;
+    font-size: 20;
+    font-weight: bolder;
+    margin-left: 2px;">
+
+        <div class="studentBaseMenuStudentInformation">
+
+            <div class="studentBaseMenuStudentProfilePictureArea">
+                <img src="{{student.profile_picture.url}}">
+            </div>
+
+            <div class="studentBaseMenuStudentEmailAndComputingID">
+                <h4>{{profile.computing_id}}</h4>
+                <h5>{{Profile.email}}</h5>
+            </div>
+        </div>
+
+        <div class="menuLinksArea">
+            <li> <a href="{% url 'profilePage' %}">Profile</a></li>
+            <li> <a href="#">Add a Post </a></li>
+            <li> <a href="#"></a></li>
+            <li> <a href="#">Contact Representative</a></li>
+            <li> <a href="{% url 'logout' %}">Sign Out</a></li>
+        </div>
+
+
+    </div>
+
+
+
+
+
+</html>
+
