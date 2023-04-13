@@ -1,0 +1,45 @@
+{% extends 'base.html'%}
+{% block maincontent %}
+  <main style="padding-top:5%">
+  <form action="#" name="BookCreationForm" method="POST">
+        {% csrf_token %}
+
+<!--        <div class="form-group" style="display: flex !important; align-items: center; align-text:center; justify-content:space-around !important; margin-bottom: 10px;">-->
+<!--            <label for="book_cover"><h4>Cover:</h4> </label>-->
+<!--            <input type="file" id ="book_cover"  style="width: 60%;" name="book_cover" class="form-control" placeholder="Book Cover" required />-->
+<!--        </div>-->
+
+        <div class="form-group" style="display: flex !important; align-items: center; align-text:center; justify-content:space-around !important; margin-bottom: 10px;">
+            <label for="studyCourse"><h6>Course:</h6> </label>
+            <input type="text" id ="studyCourse"  style="width: 60%;" name="studyCourse" class="form-control" placeholder="Course to Study" required />
+        </div>
+
+        <div class="form-group" style="display: flex !important; align-items: center; align-text:center; margin-bottom: 10px;" >
+            <label for="studyPreference"><h6>Study Preference:</h6></label>
+            <select name="studyPreference" id="studyPreference" class="form-control">
+                    <option value ="select" >Select</option>
+                    <option value ="studyBuddy" >Study Buddy</option>
+                    <option value ="studyGroup" >Study Group</option>
+                    <option value ="no_selection" >No Selection</option>
+            </select>
+        </div>
+
+        <div class="form-group" style="display: flex !important; align-items: center; align-text:center; justify-content:space-around !important; margin-bottom: 10px;" >
+            <label for="description"><h6>Additional Comments:</h6></label>
+            <input type="text" id="description" name="description" style="width: 60%;"  class="form-control" placeholder="Additional Comments" required/>
+        </div>
+
+        <div class="form-group" style="display: flex !important; align-items: center; align-text:center; justify-content:space-around !important; margin-bottom: 10px;">
+            <label for="publish_date"><h6>Published:</h6> </label>
+            <input type="date" id ="publish_date"  style="width: 60%;" name="publish_date" class="form-control" placeholder="" required />
+        </div>
+
+        <div class="form-group" style="display: flex !important; align-items: center; align-text:center; justify-content:center !important; margin-bottom: 25px;">
+            <input type="submit" value="Add Post" class="btn btn-secondary" />
+
+        </div>
+
+  </form>
+  </main>
+
+{% endblock %}

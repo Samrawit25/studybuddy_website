@@ -77,18 +77,27 @@ def homepage(request):
     except:
         return redirect('verification')
 
-    return render(request, "studybuddy/homepage.html", {})
+    all_posts = Post.objects.all()
+
+    context = {
+        "first_name": request.user.first_name,
+        "last_name": request.user.last_name,
+        "email": request.user.email,
+        "computing_id": request.user.profile.computing_id,
+        "major": request.user.profile.department,
+        "available_posts": all_posts,
+    }
+
+    return render(request, "studybuddy/homepage.html", context)
 
 
 @login_required
 def userPost(request):
     if request.method == "POST":
-        owner = request.POST['owner']
-        entered_title = request.POST['title']
-        entered_study_course = request.POST['studyCourse']
-        entered_publish_date = request.POST['publish_date']
+        entered_study_course = request.POST.get('studyCourse')
         entered_study_preference = request.POST['studyPreference']
-        entered_comment = request.POST['comments']
+        entered_comment = request.POST.get('description')
+        entered_publish_date = request.POST['publish_date']
 
         # entered_trade_option = request.POST['trade_options']
         # entered_comment = request.POST['comments']
@@ -98,60 +107,37 @@ def userPost(request):
         # entered_author_first_name = full_author_name.split()[0]
 
 
-        # # Create a new post
-        # try:
-        #     post_query = Post.objects.get(pk=owner)
-        # except:
-        #
-        #     # The book does not exist in the Book table, so first create an instance of it:
-        #
-        #     new_book = Book(isbn=entered_isbn,
-        #                     book_cover=f'book_covers/{entered_book_cover}',
-        #                     title=entered_title,
-        #                     author_first_name=entered_author_first_name,
-        #                     author_last_name=entered_author_last_name,
-        #                     publish_date=entered_publish_date)
-        #     new_book.save()
-        #
-        #     # Create an AvailableBook that references the newly created Book
-        #     new_available_book_lisitng = AvailableBook()
-        #     new_available_book_lisitng.book_reference = new_book
-        #     new_available_book_lisitng.owner = Student.objects.get(
-        #         email=request.user.email)
-        #     new_available_book_lisitng.condition = entered_condition
-        #     new_available_book_lisitng.price = entered_price
-        #     new_available_book_lisitng.additional_comment = entered_comment
-        #     new_available_book_lisitng.transaction_type = entered_trade_option
-        #     new_available_book_lisitng.save()
-        #
-        #     return redirect('student_homepage')
-        #
-        # else:
+        # Create a new post
+        # The post does not exist in the post table, so first create an instance of it:
 
-            # The book already exists in the Book table:
+        new_post = Post(studyCourse=entered_study_course,
+                            studyPreference=entered_study_preference,
+                            description=entered_comment,
+                            publish_date=entered_publish_date)
+        new_post.save()
 
-            # Create an AvailableBook that references the newly created Book
-            # new_available_book_lisitng = AvailableBook()
-            # new_available_book_lisitng.book_reference = Book.objects.get(
-            #     pk=entered_isbn)
-            # new_available_book_lisitng.owner = Student.objects.get(
-            #     email=request.user.email)
-            # new_available_book_lisitng.condition = entered_condition
-            # new_available_book_lisitng.price = entered_price
-            # new_available_book_lisitng.additional_comment = entered_comment
-            # new_available_book_lisitng.transaction_type = entered_trade_option
-            # new_available_book_lisitng.save()
+        # Create an AvailableBook that references the newly created Book
+        new_available_post = Post()
+        # new_available_book_lisitng.book_reference = new_book
+        # new_available_post.
+        new_available_post.owner = Profile.objects.get(email=request.user.email)
+        new_available_post.study_course = entered_study_course
+        new_available_post.study_preference = entered_study_preference
+        new_available_post.description = entered_comment
+        new_available_post.save()
 
-            # return redirect('student_homepage')
+        return redirect('homePage')
+
 
     context = {
         "first_name": request.user.first_name,
+        "last_name": request.user.last_name,
         "email": request.user.email,
         "computing_id": request.user.profile.computing_id,
         "major": request.user.profile.department,
     }
 
-    return render(request, 'textbook_exchange/student_post.html', context)
+    return render(request, 'studybuddy/post.html', context)
 
 
 
@@ -244,3 +230,5 @@ def profile(request):
         return render(request, 'studybuddy/profilePage.html', {})
 
 
+def contact(request):
+    return render(request, 'base.html', {})

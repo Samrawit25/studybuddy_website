@@ -10,13 +10,15 @@ class Profile(models.Model):
     computing_id = models.CharField(max_length=20, null=True, unique=True)
     gender = models.CharField(max_length=20, null=True)
     date_of_birth = models.DateField(null=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures', default='/profile_pictures/default_profile_picture.jpg')
     phone_number = models.IntegerField(null=True)
     department = models.CharField(max_length=255, null=True)
     current_year = models.CharField(max_length=20, null=True)
     gender_visible = models.BooleanField(default=False)
     phone_visible = models.BooleanField(default=False)
 
-
+    def __str__(self):
+        return f'First name: {self.user.first_name}, Last name: {self.user.last_name}'
 
 class Course(models.Model):
     course_number = models.CharField(max_length=255, null=True, unique=True)
@@ -32,11 +34,11 @@ class Course(models.Model):
 
 class Post(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
-    title = models.CharField(max_length=255, null=True)
     studyCourse = models.CharField(max_length=255, null=True)
     description = models.CharField(max_length=255, null=True)
     publish_date = models.DateField(null=True)
     studyPreference = models.CharField(max_length=255, null=True)
+    # date_added = models.DateTimeField(primary_key=True, default=now, blank=False)
 
 
 class StudyBuddy(models.Model):

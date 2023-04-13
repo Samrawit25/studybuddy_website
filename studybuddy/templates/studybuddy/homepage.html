@@ -1,14 +1,16 @@
 {% load static %}
 {% load socialaccount %}
 
-
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title> Hoos Study </title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="{% static 'studybuddy/images/UVAlogo.png' %}" type="image/icon type">
   <link rel="stylesheet" href="{% static 'studybuddy/homePageStyle.css' %}">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<!--  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
@@ -23,25 +25,25 @@
     <ul class="menu__box">
       <li><a class="menu__item" href="{% url 'profilePage' %}">Profile</a></li>
       <li><a class="menu__item" href="#">Message</a></li>
-      <li><a class="menu__item" href="#">POST</a></li>
+      <li><a class="menu__item" href="{% url 'post' %}">POST</a></li>
       <li><a class="menu__item" href="#">Contact Representative</a></li>
       <li><a class="menu__item" href="{% url 'logout' %}">Sign out</a></li>
     </ul>
 
-    <a href="{% url 'homePage' %}"> <h1 style="justify-content: left; padding-left: 50px;">Hoos Study</h1> </a>
+    <a href="{% url 'homePage' %}" style="font-size:25px; padding-left:50px; font-weight:bold;"> Hoos Study </a>
   </div>
 
   <div>
     <form action="" class="searchBar" method="POST">
       {% csrf_token %}
-      <input type="text" name="searchbar" placeholder="Search">
-      <input type="submit" value="Search">
+      <input type="text" name="searchbar" placeholder="Search" style="width:75%">
+      <input type="submit" value="Search" class="btn btn-outline-secondary" style="color:black; border: 1px solid #ccc;">
     </form>
   </div>
 
   <div style="">
-    <a href="{% url 'profilePage' %}" class="btn btn-outline-secondary"> <h4>Profile</h4> </a>
-    <a href="{% url 'logout' %}" class="btn btn-outline-secondary"> <h4>Sign Out</h4> </a>
+    <a href="{% url 'profilePage' %}" class="btn btn-outline-secondary"> Profile </a>
+    <a href="{% url 'logout' %}" class="btn btn-outline-secondary"> Sign Out </a>
   </div>
 
 
@@ -77,46 +79,47 @@
     <div></div>
 
     <div class="cardDisplayArea">
-
+      {% for post in available_posts %}
       <div class="card">
 
         <div class="cardImageArea">
-          <img src="{{student.profile_picture.url}}">
+          <img src="{{ post.owner.profile_picture.url}}">
         </div>
         <div class="cardBody">
-          <p>First name and last name</p>
-          <p>Study buddy / study group</p>
-          <p>Course</p>
-          <p>Description</p>
+          <p>Name:{{post.owner.user.first_name}} {{post.owner.user.last_name}}</p>
+          <p>Study Preference: {{ post.studyPreference }}</p>
+          <p>Study Course: {{ post.studyCourse }} </p>
+          <p>Comment: {{post.description}}</p>
         </div>
       </div>
+      {% endfor %}
 
-      <div class="card">
+<!--      <div class="card">-->
 
-        <div class="cardImageArea">
-          <img src="{{student.profile_picture.url}}">
-        </div>
-        <div class="cardBody">
-          <p>First name and last name</p>
-          <p>Study buddy / study group</p>
-          <p>Course</p>
-          <p>Description</p>
-        </div>
-      </div>
+<!--        <div class="cardImageArea">-->
+<!--          <img src="{{student.profile_picture.url}}">-->
+<!--        </div>-->
+<!--        <div class="cardBody">-->
+<!--          <p>First name and last name</p>-->
+<!--          <p>Study buddy / study group</p>-->
+<!--          <p>Course</p>-->
+<!--          <p>Description</p>-->
+<!--        </div>-->
+<!--      </div>-->
 
-      <div class="card">
+<!--      <div class="card">-->
 
-        <div class="cardImageArea">
-          <img src="{{student.profile_picture.url}}">
-        </div>
-        <div class="cardBody">
-          <p>First name and last name</p>
-          <p>Study buddy / study group</p>
-          <p>Course</p>
-          <p>Description</p>
-        </div>
+<!--        <div class="cardImageArea">-->
+<!--          <img src="{{student.profile_picture.url}}">-->
+<!--        </div>-->
+<!--        <div class="cardBody">-->
+<!--          <p>First name and last name</p>-->
+<!--          <p>Study buddy / study group</p>-->
+<!--          <p>Course</p>-->
+<!--          <p>Description</p>-->
+<!--        </div>-->
 
-      </div>
+<!--      </div>-->
 
 
     </div>

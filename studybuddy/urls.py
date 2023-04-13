@@ -11,6 +11,9 @@ urlpatterns = [
     path('registration/', views.verify, name='registration'),
     path('homepage/', views.homepage, name='homePage'),
     path('profile/', views.profile, name='profilePage'),
+    path('homepage/post/', views.userPost, name='post'),
+
+    path('contact', views.contact, name='contact'),
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
