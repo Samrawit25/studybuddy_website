@@ -78,18 +78,9 @@
         <p>Study Course: {{ post.studyCourse }} </p>
         <p>Comment: {{post.description}}</p>
 
-        <div style="justify-content: left; display:flex; padding-right:15px;">
-          <form action="#" method="post">
-            {% csrf_token %}
-            <input type="submit" value="EDIT" name="editBook" class="btn btn-outline-primary"/>
-            <input type="hidden" name="studentListingButton" value="{{uniqueIdentifier}}"/>
-          </form>
-
-          <form action="#" method="post">
-            {% csrf_token %}
-            <input type="submit" value="DELETE" name="deleteBook" class="btn btn-outline-danger"/>
-            <input type="hidden" name="studentListingButton" value="{{uniqueIdentifier}}_delete"/>
-          </form>
+        <div style="justify-content: left; display:flex; padding-right:15px; ">
+          <a href="{% url 'editPost' post_id=post.id %}" class="btn btn-outline-primary"> Edit </a>
+          <a href="{% url 'deletePost' post.id %}" class="btn btn-outline-danger" >Delete</a>
         </div>
 
       </div>

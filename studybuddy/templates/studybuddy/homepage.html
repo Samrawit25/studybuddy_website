@@ -34,20 +34,17 @@
   </div>
 
   <div>
-    <form action="" class="searchBar" method="POST">
-      {% csrf_token %}
-      <input type="text" name="searchbar" placeholder="Search" style="width:75%">
-      <input type="hidden" name="searchbar_identifier" value="flag" />
-      <input type="submit" value="Search" class="btn btn-outline-secondary" style="color:black; border: 1px solid #ccc;">
+    <form class="searchBar" action="{% url 'homePage' %}" method="get" style="display:flex;">
+        <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-secondary" type="submit" style="color:black; border: 1px solid #ccc;" >Search</button>
     </form>
+
   </div>
 
   <div style="">
     <a href="{% url 'profilePage' %}" class="btn btn-outline-secondary"> Profile </a>
     <a href="{% url 'logout' %}" class="btn btn-outline-secondary"> Sign Out </a>
   </div>
-
-
 
 </nav>
 

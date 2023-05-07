@@ -28,6 +28,9 @@ class ProfileUpdateForm(forms.ModelForm):
 
 
 class PostForm(forms.ModelForm):
+    STUDYPREFERENCE_CHOICES = (('StudyBuddy', 'Study Buddy'), ('Study Group', 'Study Group'),)
+    studyPreference = forms.ChoiceField(choices=STUDYPREFERENCE_CHOICES)
+
     class Meta:
         model = Post
         fields = ['studyCourse', 'studyPreference', 'description']

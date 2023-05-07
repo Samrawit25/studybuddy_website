@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -7,7 +7,7 @@ from .models import *
 from .forms import PostForm, ProfileUpdateForm
 from django.contrib import messages
 import requests
-from django.views.generic import CreateView
+from django.views.generic import UpdateView
 from django.db.models import Q
 from django.templatetags.static import static
 
@@ -93,7 +93,17 @@ def homepage(request):
     for dept in luthers_list_API_response:
         all_dept.append(dept["subject"])
 
-    all_posts = Post.objects.all()
+    #for search
+    if request.method == 'GET':
+        query = request.GET.get('q')
+        if query:
+            all_posts = Post.objects.filter(
+                Q(studyCourse__icontains=query)|
+                Q(studyPreference__icontains=query)|
+                Q(description__icontains=query)
+            ).distinct()
+        else:
+            all_posts = Post.objects.all()
 
     context = {
         "first_name": request.user.first_name,
@@ -108,59 +118,8 @@ def homepage(request):
     return render(request, "studybuddy/homepage.html", context)
 
 
-# class CreatePostView(CreateView):
-#     model = Post
-#     fields = ['studyCourse', 'studyPreference']
-#
-#     def form_valid(self, form):
-#         form.instance.owner = self.request.user
-#         return super().form_valid(form)
-
-
 @login_required
 def userPost(request):
-    # #retrieve posts from DB
-    # available_post = Post.objects.all();
-    # if request.method == "POST":
-    #     #Get the data from POST request
-    #     entered_study_course = request.POST.get('studyCourse')
-    #     entered_study_preference = request.POST['studyPreference']
-    #     entered_comment = request.POST.get('description')
-    #     entered_publish_date = request.POST['publish_date']
-    #
-    #     # Create a new post
-    #     # The post does not exist in the post table, so first create an instance of it:
-    #
-    #     new_post = Post(studyCourse=entered_study_course,
-    #                         studyPreference=entered_study_preference,
-    #                         description=entered_comment,
-    #                         publish_date=entered_publish_date)
-    #     new_post.save()
-    #
-    #     # Create an AvailableBook that references the newly created Book
-    #     new_available_post = Post()
-    #     # new_available_book_lisitng.book_reference = new_book
-    #     # new_available_post.
-    #     new_available_post.owner = Profile.objects.get(email=request.user.email)
-    #     new_available_post.study_course = entered_study_course
-    #     new_available_post.study_preference = entered_study_preference
-    #     new_available_post.description = entered_comment
-    #     new_available_post.save()
-    #
-    #     # retrieve posts from DB
-    #     available_post = Post.objects.all();
-    #
-    #     return redirect('homePage')
-    #
-    # context = {
-    #     "first_name": request.user.first_name,
-    #     "last_name": request.user.last_name,
-    #     "email": request.user.email,
-    #     "computing_id": request.user.profile.computing_id,
-    #     "major": request.user.profile.department,
-    #     "available_post": available_post,
-    # }
-
     form = PostForm(request.POST or None, request.FILES or None)
     if request.method == 'POST':
 
@@ -174,6 +133,34 @@ def userPost(request):
 
     return render(request, 'studybuddy/post.html', {'form': form})
 
+
+@login_required
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id, owner=request.user)
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Successfully updated")
+            return redirect('profilePage')
+    else:
+        form = PostForm(instance=post)
+
+    return render(request, 'studybuddy/editUserPost.html', {'form': form})
+
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id, owner=request.user)
+
+    if request.method == 'POST':
+        post.delete()
+        messages.success(request, "Successfully deleted")
+        return redirect('profilePage')
+
+    return render(request, 'studybuddy/deleteUserPost.html', {'post': post})
 
 
 @login_required
@@ -193,6 +180,7 @@ def profile(request):
     return render(request, 'studybuddy/profilePage.html', context)
 
 
+@login_required
 def editProfilePage(request):
     if request.method == 'POST':
         pro_form = ProfileUpdateForm(request.POST, request.FILES,
@@ -213,5 +201,6 @@ def editProfilePage(request):
     return render(request, 'studybuddy/editProfile.html', context)
 
 
+@login_required
 def contact(request):
     return render(request, 'base.html', {})
