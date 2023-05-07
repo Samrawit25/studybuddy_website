@@ -23,6 +23,12 @@
   <div class="accountRegistrationContentArea">
     <form action="#" name="ProfileCreationForm" method="POST">
       {% csrf_token %}
+
+      <div class="form-group" style="display: flex !important; align-items: center; align-text:center; justify-content:space-around !important; margin-bottom: 10px;">
+        <label for="profile_picture"><h4>Profile Picture:</h4> </label>
+        <input type="file" id ="profile_picture"  style="width: 60%;" name="profile_picture" class="form-control" placeholder="Profile Picture" required />
+      </div>
+
       <div class="form-group" style="display: flex !important; align-items: center; align-text:center;">
                 <label for="age"><h6>Date of Birth:</h6> </label>
                 <input type="date" id ="age"  name="age" class="form-control" placeholder="Enter your age" required />

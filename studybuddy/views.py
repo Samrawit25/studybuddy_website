@@ -4,7 +4,10 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import *
+from .forms import PostForm, ProfileUpdateForm
+from django.contrib import messages
 import requests
+from django.views.generic import CreateView
 from django.db.models import Q
 from django.templatetags.static import static
 
@@ -36,12 +39,14 @@ def verify(request):
 
         if request.method == 'POST':
                 # Create a Student Profile
+                entered_profile_picture = request.POST['profile_picture']
                 entered_date_of_birth = request.POST['age']
                 entered_computing_id = request.POST['computing_id'].strip()
                 entered_major = request.POST['major'].strip()
                 entered_year = request.POST['current_year']
 
                 new_student = Profile(user=request.user, email=request.user.email,
+                                      profile_picture=f'profile_picture/{entered_profile_picture}',
                                       computing_id=entered_computing_id,
                                       date_of_birth=entered_date_of_birth,
                                       department=entered_major,
@@ -77,6 +82,17 @@ def homepage(request):
     except:
         return redirect('verification')
 
+
+    luthers_list_API_response = requests.get(
+        "https://sisuva.admin.virginia.edu/psc/ihprd/UVSS/SA/s/WEBLIB_HCX_CM.H_CLASS_SEARCH"
+        ".FieldFormula.IScript_ClassSearchOptions?institution=UVA01&term=1232").json()[
+        "subjects"]
+
+    all_dept = []
+
+    for dept in luthers_list_API_response:
+        all_dept.append(dept["subject"])
+
     all_posts = Post.objects.all()
 
     context = {
@@ -86,148 +102,115 @@ def homepage(request):
         "computing_id": request.user.profile.computing_id,
         "major": request.user.profile.department,
         "available_posts": all_posts,
+        "uva_departments": all_dept,
     }
 
     return render(request, "studybuddy/homepage.html", context)
 
 
+# class CreatePostView(CreateView):
+#     model = Post
+#     fields = ['studyCourse', 'studyPreference']
+#
+#     def form_valid(self, form):
+#         form.instance.owner = self.request.user
+#         return super().form_valid(form)
+
+
 @login_required
 def userPost(request):
-    if request.method == "POST":
-        entered_study_course = request.POST.get('studyCourse')
-        entered_study_preference = request.POST['studyPreference']
-        entered_comment = request.POST.get('description')
-        entered_publish_date = request.POST['publish_date']
+    # #retrieve posts from DB
+    # available_post = Post.objects.all();
+    # if request.method == "POST":
+    #     #Get the data from POST request
+    #     entered_study_course = request.POST.get('studyCourse')
+    #     entered_study_preference = request.POST['studyPreference']
+    #     entered_comment = request.POST.get('description')
+    #     entered_publish_date = request.POST['publish_date']
+    #
+    #     # Create a new post
+    #     # The post does not exist in the post table, so first create an instance of it:
+    #
+    #     new_post = Post(studyCourse=entered_study_course,
+    #                         studyPreference=entered_study_preference,
+    #                         description=entered_comment,
+    #                         publish_date=entered_publish_date)
+    #     new_post.save()
+    #
+    #     # Create an AvailableBook that references the newly created Book
+    #     new_available_post = Post()
+    #     # new_available_book_lisitng.book_reference = new_book
+    #     # new_available_post.
+    #     new_available_post.owner = Profile.objects.get(email=request.user.email)
+    #     new_available_post.study_course = entered_study_course
+    #     new_available_post.study_preference = entered_study_preference
+    #     new_available_post.description = entered_comment
+    #     new_available_post.save()
+    #
+    #     # retrieve posts from DB
+    #     available_post = Post.objects.all();
+    #
+    #     return redirect('homePage')
+    #
+    # context = {
+    #     "first_name": request.user.first_name,
+    #     "last_name": request.user.last_name,
+    #     "email": request.user.email,
+    #     "computing_id": request.user.profile.computing_id,
+    #     "major": request.user.profile.department,
+    #     "available_post": available_post,
+    # }
 
-        # entered_trade_option = request.POST['trade_options']
-        # entered_comment = request.POST['comments']
-        # entered_isbn = request.POST['isbn'].strip()
-        # entered_book_cover = request.POST['book_cover']
-        # full_author_name = request.POST['author_name'].strip()
-        # entered_author_first_name = full_author_name.split()[0]
+    form = PostForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST':
 
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.owner = request.user
+            obj.save()
+            form = PostForm()
+            messages.success(request, "Successfully created")
+            return redirect('homePage')
 
-        # Create a new post
-        # The post does not exist in the post table, so first create an instance of it:
-
-        new_post = Post(studyCourse=entered_study_course,
-                            studyPreference=entered_study_preference,
-                            description=entered_comment,
-                            publish_date=entered_publish_date)
-        new_post.save()
-
-        # Create an AvailableBook that references the newly created Book
-        new_available_post = Post()
-        # new_available_book_lisitng.book_reference = new_book
-        # new_available_post.
-        new_available_post.owner = Profile.objects.get(email=request.user.email)
-        new_available_post.study_course = entered_study_course
-        new_available_post.study_preference = entered_study_preference
-        new_available_post.description = entered_comment
-        new_available_post.save()
-
-        return redirect('homePage')
-
-
-    context = {
-        "first_name": request.user.first_name,
-        "last_name": request.user.last_name,
-        "email": request.user.email,
-        "computing_id": request.user.profile.computing_id,
-        "major": request.user.profile.department,
-    }
-
-    return render(request, 'studybuddy/post.html', context)
+    return render(request, 'studybuddy/post.html', {'form': form})
 
 
 
 @login_required
 def profile(request):
-
-    # Pass ALL the logged in student's information to the template
-    # logged_in_student = Profile.objects.get(email=request.user.email)
-
-    if request.method == "POST":
-        # Change template if user wants to update personal information
-        try:
-            request.POST['edit_profile_identifier']
-        except:
-            pass
-        else:
-            edit_profile_information = True
-
-        # Handle the POST request to update personal information
-        try:
-            request.POST['edit_profile_confirmation_identifier']
-        except:
-            pass
-        else:
-
-            update_picture = request.POST['picture_status']
-            update_major = request.POST['major_status']
-            update_year = request.POST['year_status']
-            update_phone_number = request.POST['phone_number_status']
-            update_gender_visibility = request.POST['gender_visibility_status']
-            update_phone_visibility = request.POST['phone_visibility_status']
-
-            if update_picture == "true":
-                new_picture = request.FILES['user_profile_picture']
-            else:
-                new_picture = Profile.objects.get(
-                    email=request.user.email).profile_picture
-
-            if update_major == "true":
-                new_major = request.POST['major']
-            else:
-                new_major = Profile.objects.get(email=request.user.email).department
-
-            if update_year == "true":
-                new_year = request.POST['current_year']
-            else:
-                new_year = Profile.objects.get(email=request.user.email).current_year
-
-            if update_phone_number == "true":
-                new_phone_number = request.POST['phone_number']
-            else:
-                new_phone_number = Profile.objects.get(
-                    email=request.user.email).phone_number
-
-            if update_gender_visibility == "true":
-                new_gender_visibility = request.POST['gender_visibility']
-
-            else:
-                new_gender_visibility = Profile.objects.get(
-                    email=request.user.email).gender_visible
-
-            if update_phone_visibility == "true":
-                new_phone_visibility = request.POST['phone_visibility']
-
-            else:
-                new_phone_visibility = Profile.objects.get(
-                    email=request.user.email).phone_visible
-
-            logged_in_user = Profile.objects.get(email=request.user.email)
-            logged_in_user.profile_picture = new_picture
-            logged_in_user.phone_number = new_phone_number
-            logged_in_user.department = new_major
-            logged_in_user.current_year = new_year
-            logged_in_user.gender_visible = new_gender_visibility
-            logged_in_user.phone_visible = new_phone_visibility
-            logged_in_user.save(
-                update_fields=['profile_picture', 'current_year', 'phone_visible',
-                               'gender_visible', 'department', 'phone_number'])
-
-            return redirect("profilePage")
+    all_posts = Post.objects.filter(owner=User.objects.get(email=request.user.email))
+    context = {
+        "first_name": request.user.first_name,
+        "last_name": request.user.last_name,
+        "email": request.user.email,
+        "computing_id": request.user.profile.computing_id,
+        "profile_pic": request.user.profile.profile_picture.url,
+        "major": request.user.profile.department,
+        "all_posts": all_posts,
+        "date_of_birth": request.user.profile.date_of_birth,
+        "phone_number": request.user.profile.phone_number,
+    }
+    return render(request, 'studybuddy/profilePage.html', context)
 
 
-    # if edit_profile_information:
-    #     context = {
-    #         'student': logged_in_student
-    #     }
-    #     return render(request, 'studybuddy/edit_profilePage_information.html', context)
+def editProfilePage(request):
+    if request.method == 'POST':
+        pro_form = ProfileUpdateForm(request.POST, request.FILES,
+                                     instance=request.user.profile)
+
+        # save the edited profile info
+        if pro_form.is_valid():
+            pro_form.save()
+            messages.success(request, f'Your account has been updated!')
+            return redirect('profilePage')
 
     else:
-        return render(request, 'studybuddy/profilePage.html', {})
+        pro_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+            'pro_form': pro_form
+    }
+    return render(request, 'studybuddy/editProfile.html', context)
 
 
 def contact(request):

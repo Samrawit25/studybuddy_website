@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 from django.utils.timezone import now
 
 
@@ -10,7 +11,7 @@ class Profile(models.Model):
     computing_id = models.CharField(max_length=20, null=True, unique=True)
     gender = models.CharField(max_length=20, null=True)
     date_of_birth = models.DateField(null=True)
-    profile_picture = models.ImageField(upload_to='profile_pictures', default='/profile_pictures/default_profile_picture.jpg')
+    profile_picture = models.ImageField(upload_to='profile_pictures', default='/profile_pictures/default_pic.jpg')
     phone_number = models.IntegerField(null=True)
     department = models.CharField(max_length=255, null=True)
     current_year = models.CharField(max_length=20, null=True)
@@ -20,24 +21,13 @@ class Profile(models.Model):
     def __str__(self):
         return f'First name: {self.user.first_name}, Last name: {self.user.last_name}'
 
-class Course(models.Model):
-    course_number = models.CharField(max_length=255, null=True, unique=True)
-    course_section = models.CharField(max_length=255, null=True)
-    subject = models.CharField(max_length=255, null=True)
-    description = models.CharField(max_length=255, null=True)
-    units = models.CharField(max_length=255, null=True)
-    catalog_number = models.CharField(max_length=255, null=True)
-    instructor_first_name = models.CharField(max_length=255, null=True)
-    instructor_last_name = models.CharField(max_length=255, null=True)
-    instructor_email = models.CharField(max_length=255, null=True)
-
 
 class Post(models.Model):
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     studyCourse = models.CharField(max_length=255, null=True)
-    description = models.CharField(max_length=255, null=True)
-    publish_date = models.DateField(null=True)
     studyPreference = models.CharField(max_length=255, null=True)
+    description = models.TextField(max_length=400, null=True)
+    publish_date = models.DateTimeField(default=timezone.now)
     # date_added = models.DateTimeField(primary_key=True, default=now, blank=False)
 
 

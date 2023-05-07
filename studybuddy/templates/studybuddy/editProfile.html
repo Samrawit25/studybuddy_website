@@ -1,0 +1,17 @@
+{% extends 'base.html'%}
+{% block maincontent %}
+
+  <main style="padding-top:5%">
+    <form method="POST" enctype="multipart/form-data" style="padding-left:2%;">
+      {% csrf_token %}
+      <fieldset class="form-group">
+        <legend class="border-bottom mb-4" > Profile Info </legend>
+        {{ pro_form.as_p }}
+      </fieldset>
+      <div class="form-group" >
+        <button type="submit" class="btn btn-secondary">Update</button>
+      </div>
+    </form>
+
+  </main>
+{% endblock %}

@@ -131,9 +131,9 @@
     margin:0;
     padding:0;
     /* width:100%; */
-    width: 70%;
+    width: 67%;
     position:absolute;
-    top:80px;
+    top:12%;
     bottom:5px;
 
     color: black;
@@ -145,9 +145,44 @@
 
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+
+}
+.profilePageInformationSection {
     display: flex;
-    flex-direction: column;
+}
+
+.profilePageImageContainer {
+    /*background-color: red;*/
+    height: 30%;
+    width: 25%;
+    padding: 5px;
+    display:flex;
+    justify-content: center;
+}
+.profilePageImageContainer img {
+    height: 100%;
+    width:100%;
+}
+
+.profilePageInformationArea {
+    padding: 7px;
+}
+
+/*post info display in profile page*/
+.profilePagePostContainerTitle {
+    padding:20px;
+    justify-content: center;
+    text-align: center;
     align-items: center;
 }
+
+.profilePagePostContents {
+    position: relative;
+    padding:13px;
+    align-items: center;
+    font-size: 13;
+    /*background-color: gainsboro!important;*/
+}
+
 
 /*------------content area ends-----------*/
