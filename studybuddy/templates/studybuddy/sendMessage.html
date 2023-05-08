@@ -1,0 +1,45 @@
+{% extends 'base.html'%}
+{% block maincontent %}
+
+<!-- send_message.html -->
+<div style="padding: 10px;">
+  <div class="messagesReceiverInfoDisplay" style="display:flex; padding: 10px;">
+    <div class="cardImageArea">
+      <img class="rounded-circle" src="{{recipient.profile.profile_picture.url }}">
+    </div>
+    <div>
+      <p> Name: {{ recipient.username }}</p>
+    </div>
+  </div>
+
+  <div class="conversation">
+    {% for conversation in conversations %}
+    {% if conversation.sender == request.user %}
+      <div class="sentMessageDisplay">
+        <strong> {{conversation.message}} </strong>
+        <small> {{conversation.sent_at }} </small>
+      </div>
+    {% else %}
+      <div class="receivedMessageDisplay">
+        <strong> {{conversation.message}} </strong>
+        <small> {{conversation.sent_at }} </small>
+      </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+
+  <div>
+    <form id="message-form" method="post" action="{% url 'sendMessage' recipient_id=recipient.id %}" >
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="message-input">Message:</label>
+        <textarea class="form-control" id="message-input" name="message" placeholder="Enter message"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+  </div>
+
+</div>
+
+{% endblock %}

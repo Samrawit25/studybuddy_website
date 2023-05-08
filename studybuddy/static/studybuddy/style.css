@@ -172,7 +172,7 @@
     /*margin:0;
     padding:0;
     *//* width:100%; */
-    width: 70%;
+    width: 67%;
     position:absolute;
     top:10%;
     bottom:5px;
@@ -192,4 +192,45 @@
     align-items: center;
 */
 }
-/*------------------------------------------content area begins--------------------------------*/
+/*------------------------------------------content area ends--------------------------------*/
+
+
+/*-------------------------------------send message area begins---------------------------------*/
+.cardImageArea{
+
+    /* background-color: blue; */
+    height: 100px;
+    width: 10%;
+    padding: 3px;
+    display:flex;
+    justify-content: center;
+
+}
+
+.cardImageArea img{
+    height: 100%;
+    width:100%;
+}
+.nameDisplay{
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    font: 15;
+}
+
+.conversation{
+    background-color: gainsboro!important;
+    padding: 10px;
+}
+.receivedMessageDisplay{
+    justify-content: left;
+    text-align: left;
+    align-items: left;
+}
+.sentMessageDisplay{
+    justify-content: right;
+    text-align: right;
+    align-items: right;
+}
+
+/*----------------------------------------message area ends---------------------------------*/

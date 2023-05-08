@@ -1,0 +1,51 @@
+{% extends 'base.html'%}
+{% block maincontent %}
+
+
+<head>
+    <style>
+         body {
+            background-image:  linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.9)),url("/static/images/homepage_medium.jpg");
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .container {
+            align-items: center;
+            width: 40%;
+            background: #fff;
+            border-radius: 6px;
+            padding: 20px 60px 30px 40px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            border: 1px;
+        }
+        .container .content{
+            align-items: center;
+            justify-content: space-between;
+        }
+        .container .content h2 {
+            text-align: center;
+            align-items: center;
+            color: #3e2093;
+        }
+        .container .content p {
+            align-items: center;
+            text-align: center;
+            color: #afafb6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="content">
+            <h2>We sent your message!</h2>
+            <p> You can send another in the <a href=" {% url 'contact' %}">Contact Page</a></p>
+        </div>
+    </div>
+</body>
+
+
+{%endblock%}

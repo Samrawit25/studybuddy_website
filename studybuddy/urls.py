@@ -15,9 +15,12 @@ urlpatterns = [
     path('homepage/post/', views.userPost, name='post'),
     path('post/delete/<int:post_id>/', views.delete_post, name='deletePost'),
     path('profile/edit/<int:post_id>/', views.edit_post, name='editPost'),
-    path('contact', views.contact, name='contact'),
+    path('homepage/send_message/<int:recipient_id>/', views.send_message, name='sendMessage'),
+    path('message/', views.messages, name='message'),
+    path('representative', views.list_messages, name='representativePortal'),
+    path('contact/', views.contact, name='contact'),
+    path('contact/thanks', views.contact, name='contact_thankyou'),
 
-    # path('post/new/', CreatePostView.as_view(), name='postCreate'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

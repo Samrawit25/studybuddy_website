@@ -1,0 +1,18 @@
+{% extends 'base.html'%}
+{% block maincontent %}
+
+  <h1>Messages</h1>
+  {% if messages_received %}
+    <ul class="list-group">
+      <li class="list-group-item">
+        <strong>{{ messages_received.0.sender.username }}</strong> to <strong>{{ messages_received.0.recipient.username }}</strong>: {{ messages_received.0.message }}
+        <br>
+        <small>Sent at {{ messages_received.0.sent_at }}</small>
+        <a href="{% url 'sendMessage' recipient_id=messages_received.0.sender.id %}" class="btn btn-primary">Reply</a>
+      </li>
+    </ul>
+  {% else %}
+    <p>You have no messages.</p>
+  {% endif %}
+
+{% endblock %}

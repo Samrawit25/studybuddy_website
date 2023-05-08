@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -10,6 +10,8 @@ import requests
 from django.views.generic import UpdateView
 from django.db.models import Q
 from django.templatetags.static import static
+from django.contrib.admin.views.decorators import staff_member_required
+
 
 
 def index(request):
@@ -80,7 +82,7 @@ def homepage(request):
     try:
         user_profile = request.user.profile
     except:
-        return redirect('verification')
+        return redirect('registration')
 
 
     luthers_list_API_response = requests.get(
@@ -189,7 +191,7 @@ def editProfilePage(request):
         # save the edited profile info
         if pro_form.is_valid():
             pro_form.save()
-            messages.success(request, f'Your account has been updated!')
+            # messages.success(request, f'Your account has been updated!')
             return redirect('profilePage')
 
     else:
@@ -202,5 +204,62 @@ def editProfilePage(request):
 
 
 @login_required
+def send_message(request, recipient_id):
+    recipient = get_object_or_404(User, id=recipient_id)
+    if request.method == 'POST':
+        message = request.POST.get('message')
+        new_message = Message(sender=request.user,
+                               recipient=recipient,
+                               message=message)
+        new_message.save()
+        # messages.success(request, 'Message sent.')
+        return redirect('message')
+
+    messages_received = Message.objects.filter(recipient=request.user)
+    messages_sent = Message.objects.filter(sender=request.user)
+    conversations = Message.objects.all()
+    return render(request, 'studybuddy/sendMessage.html',
+                  {'recipient': recipient,
+                   'conversations': conversations,
+                   'messages_received': messages_received,
+                   'messages_sent': messages_sent
+                   })
+
+
+@login_required
+def messages(request):
+    messages_received = Message.objects.filter(recipient=request.user).order_by(
+        '-sent_at')
+    messages_sent = Message.objects.filter(sender=request.user).order_by(
+        '-sent_at')
+    return render(request, 'studybuddy/messages.html',
+                  {'messages_received': messages_received,
+                   'messages_sent': messages_sent})
+
+
+@staff_member_required
+def list_messages(request):
+    if request.method == "POST":
+        message = Contact.objects.get(id=request.POST["archive_id"])
+        message.archived = True
+        message.save()
+
+    messages_to_rep = Contact.objects.all().filter(archived=False).order_by('date')
+
+    return render(request, 'studybuddy/contactRepresentative.html', {
+        'messages_to_rep': messages_to_rep
+    })
+
+
 def contact(request):
-    return render(request, 'base.html', {})
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        mode_of_contact = request.POST.get('contact')
+        question_categories = request.POST.get('queries')
+        message = request.POST.get('message')
+        contact_data = Contact(name=name, email=email, phone=phone, mode_of_contact=mode_of_contact, question_categories=question_categories, message=message)
+        contact_data.save()
+        return render(request, 'studybuddy/contact_thankyou.html')
+    return render(request, 'studybuddy/contact.html')

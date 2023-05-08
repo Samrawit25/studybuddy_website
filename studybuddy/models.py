@@ -39,3 +39,43 @@ class StudyBuddy(models.Model):
 class StudyGroup(models.Model):
     post_reference = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
     publish_date = models.DateField(null=True)
+
+
+class Message(models.Model):
+    sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
+    recipient = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
+    message = models.TextField()
+    sent_at = models.DateTimeField(auto_now_add=True)
+    read_at = models.DateTimeField(null=True, blank=True)
+
+    # Make objects sortable using list.sort()
+
+    def __lt__(self, dm):
+        return self.date_sent < dm.date_sent
+
+
+select_mode_of_contact = (
+    ("email", "E-Mail"),
+    ("phone", "Phone"),
+)
+select_question_categories = (
+    ("certification", "Certification"),
+    ("interview", "Interview"),
+    ("material", "Material"),
+    ("access_duration","Access and Duration"),
+    ("other", "Others"),
+)
+
+class Contact(models.Model):
+    name = models.CharField(max_length=250)
+    email = models.EmailField()
+    phone = models.CharField(max_length=10)
+    mode_of_contact = models.CharField('Contact by', max_length=50, choices=select_mode_of_contact, default='email')
+    question_categories = models.CharField('How can we help you?', max_length=50, choices=select_question_categories, default='certification')
+    message = models.TextField(max_length=3000)
+    archived = models.BooleanField(default=False)
+    date = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return self.email
+

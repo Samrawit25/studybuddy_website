@@ -16,7 +16,7 @@
 </head>
 
 <nav class="navbar">
-  <div class="hamburger-menu">
+  <div class="hamburger-menu" style="display:flex;">
     <input id="menu__toggle" type="checkbox" />
     <label class="menu__btn" for="menu__toggle">
       <span></span>
@@ -24,13 +24,16 @@
 
     <ul class="menu__box">
       <li><a class="menu__item" href="{% url 'profilePage' %}">Profile</a></li>
-      <li><a class="menu__item" href="#">Message</a></li>
+      <li><a class="menu__item" href="{% url 'message' %}">Message</a></li>
       <li><a class="menu__item" href="{% url 'post' %}">POST</a></li>
-      <li><a class="menu__item" href="#">Contact Representative</a></li>
+      <li><a class="menu__item" href="{% url 'contact' %}">Contact Representative</a></li>
       <li><a class="menu__item" href="{% url 'logout' %}">Sign out</a></li>
     </ul>
 
+    <div>
     <a href="{% url 'homePage' %}" style="font-size:25px; padding-left:50px; font-weight:bold;"> Hoos Study </a>
+    </div>
+
   </div>
 
   <div>
@@ -92,11 +95,7 @@
             <p class = "article-content" style="white-space: pre-line;"> Study Course: {{ post.studyCourse }} </p>
             <p class = "article-content" style="white-space: pre-line;"> Comment: {{post.description}} </p>
 
-            <form action="#" method="post">
-                {% csrf_token %}
-                <input style="justify-content: right;" type="submit" value="Message" name="contact_user" class="btn btn-primary" />
-                <input style="justify-content: right;" type="hidden" name="unique_POST_identifier_to_add_to_wishlist" value="{{listing.pk}}_wishlist" />
-              </form>
+            <a href="{% url 'sendMessage'  post.owner.id %}" class="btn btn-outline-primary"> Message </a>
           </div>
 
         </div>

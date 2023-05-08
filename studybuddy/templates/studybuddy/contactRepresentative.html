@@ -1,0 +1,57 @@
+{% extends 'base.html'%}
+{% block maincontent %}
+
+
+<div>
+  <div>
+    <h1 style="justify-content: center;
+    text-align: center;
+    align-items: center;"> Representative portal </h1>
+  </div>
+
+  <div class="displayMessageArea">
+    {%for message in messages_to_rep%}
+    <div class="representative-message-card">
+        <p>
+            <b>Date:</b>
+            {{message.date}}
+        </p>
+        <p>
+            <b>Name:</b>
+            {{message.name}}
+        </p>
+        <p>
+            <b>Email:</b>
+            <a href="mailto:{{message.email}}">{{message.email}}</a>
+        </p>
+        <p>
+            <b>Phone:</b>
+            {{message.phone}}
+        </p>
+        <p>
+            <b>Preferred mode of contact:</b>
+            {{message.mode_of_contact}}
+        </p>
+        <p>
+            <b>Category:</b>
+            {{message.question_categories}}
+        </p>
+        <p>
+            <b>Message:</b>
+            {{message.message}}
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="archive_id" value="{{message.id}}">
+            <input class="btn btn-secondary" type="submit" value="Archive message">
+        </form>
+    </div>
+    {%endfor%}
+  </div>
+
+</div>
+
+
+
+
+{%endblock%}
